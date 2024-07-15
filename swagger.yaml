@@ -66,9 +66,7 @@ paths:
                 status: 500
                 message: "Lỗi không xác định. Thử lại sau"
       security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
+        - jwt_auth: [ ]
   /auth/register:
     post:
       tags:
@@ -119,9 +117,57 @@ paths:
                 status: 500
                 message: "Lỗi không xác định. Thử lại sau"
       security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
+        - jwt_auth: [ ]
+  /topics:
+    post:
+      tags:
+        - topic
+      summary: Tạo Topic
+      operationId: createTopic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopicDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TopicDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TopicDTO'
+        required: true
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Topic'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Topic'
+        '400':
+          description: Tên chủ đề đã tồn tại
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Tên chủ đề đã tồn tại"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
   /topics/{id}:
     get:
       tags:
@@ -133,7 +179,7 @@ paths:
           in: path
           required: true
           schema:
-            type : string
+            type: string
             example: 6694e9136fe1f7bae3db86fc
       operationId: getTopic
       responses:
@@ -154,7 +200,7 @@ paths:
                 $ref: '#/components/schemas/BaseError'
               example:
                 timestamp: "2024-07-15T17:11:02.251Z"
-                status: 500
+                status: 400
                 message: "Không tìm thấy đề mục"
         '500':
           description: Lỗi không xác định
@@ -167,9 +213,7 @@ paths:
                 status: 500
                 message: "Lỗi không xác định. Thử lại sau"
       security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
+        - jwt_auth: [ ]
 components:
   schemas:
     BaseError:
@@ -268,6 +312,17 @@ components:
           example: "2024-07-15T09:17:07.361Z"
       xml:
         name: topic
+    TopicDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Chủ đề 2"
+        description:
+          type: string
+          example: "Mô tả"
+      xml:
+        name: topicDTO
     ApiResponse:
       type: object
       properties:
@@ -280,18 +335,9 @@ components:
           type: string
       xml:
         name: '##default'
-  requestBodies:
-
   securitySchemes:
-    petstore_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
-          scopes:
-            write:pets: modify pets in your account
-            read:pets: read your pets
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+    jwt_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Nhập JWT của bạn vào đây
