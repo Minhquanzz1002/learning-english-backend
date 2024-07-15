@@ -250,6 +250,63 @@ paths:
                 message: "Lỗi không xác định. Thử lại sau"
       security:
         - jwt_auth: [ ]
+    put:
+      tags:
+        - topic
+      summary: Cập nhật thông tin chủ đề theo ID
+      parameters:
+        - name: id
+          description: Topic ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopicDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TopicDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TopicDTO'
+        required: true
+      operationId: updateTopic
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Topic'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Topic'
+        '404':
+          description: Không tìm thấy đề mục
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Không tìm thấy đề mục"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
 components:
   schemas:
     BaseError:
