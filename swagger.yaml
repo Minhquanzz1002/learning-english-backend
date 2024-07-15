@@ -168,6 +168,42 @@ paths:
                 message: "Lỗi không xác định. Thử lại sau"
       security:
         - jwt_auth: [ ]
+    get:
+      tags:
+        - topic
+      summary: Lấy thông tin chủ đề
+      parameters:
+        - name: name
+          description: Tên chủ đề
+          in: query
+          schema:
+            type: string
+            example: family
+      operationId: getTopics
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Topic'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Topic'
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
   /topics/{id}:
     get:
       tags:
@@ -323,18 +359,6 @@ components:
           example: "Mô tả"
       xml:
         name: topicDTO
-    ApiResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        type:
-          type: string
-        message:
-          type: string
-      xml:
-        name: '##default'
   securitySchemes:
     jwt_auth:
       type: http

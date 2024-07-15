@@ -38,16 +38,14 @@ const getTopic = async (req: express.Request, res: express.Response, next: NextF
   return res.send(topic);
 };
 
-const getTopics = (_: express.Request, res: express.Response) => {
-  Topic.find()
-    .then(topics => {
-      Logger.info("Get topics successfully");
-      return res.status(200).json(topics);
-    })
-    .catch((error) => {
-      Logger.error(error);
-      return res.status(500).json({ 'error': 'Internal Server Error' });
-    });
+const getTopics = async (req: express.Request, res: express.Response) => {
+  const {name} = req.query;
+  const filter = {
+    status: 'ACTIVE',
+    ...(name && {name: {$regex: name, $options: 'i'}})
+  };
+  const topics = await Topic.find(filter);
+  return res.send(topics);
 };
 
 
