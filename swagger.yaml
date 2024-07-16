@@ -179,6 +179,14 @@ paths:
           schema:
             type: string
             example: family
+        - name: type
+          description: Kiểu chủ đề
+          in: query
+          schema:
+            type: string
+            enum:
+              - THEORY
+              - VOCABULARY
       operationId: getTopics
       responses:
         '200':
@@ -388,6 +396,11 @@ components:
         description:
           type: string
           example: "Mô tả"
+        type:
+          type: string
+          enum:
+            - THEORY
+            - VOCABULARY
         status:
           type: string
           enum:
@@ -408,6 +421,11 @@ components:
     TopicDTO:
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - THEORY
+            - VOCABULARY
         name:
           type: string
           example: "Chủ đề 2"
