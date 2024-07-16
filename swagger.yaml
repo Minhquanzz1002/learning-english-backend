@@ -315,8 +315,229 @@ paths:
                 message: "Lỗi không xác định. Thử lại sau"
       security:
         - jwt_auth: [ ]
+  /topics/{topicId}/vocabularies:
+    get:
+      tags:
+        - topic
+      summary: Lấy tất cả từ vựng của chủ đề
+      parameters:
+        - name: topicId
+          description: Topic ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+      operationId: getVocabularies
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vocabulary'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Vocabulary'
+        '404':
+          description: Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
+    post:
+      tags:
+        - topic
+      summary: Thêm từ vựng cho chủ đề
+      parameters:
+        - name: topicId
+          description: Topic ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VocabularyDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/VocabularyDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VocabularyDTO'
+        required: true
+      operationId: createVocabulary
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vocabulary'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Vocabulary'
+        '404':
+          description: Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
+  /topics/{topicId}/vocabularies/{vocabularyId}:
+    put:
+      tags:
+        - topic
+      summary: Cập nhật từ vựng
+      parameters:
+        - name: topicId
+          description: Topic ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+        - name: vocabularyId
+          description: Vocabulary ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VocabularyDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/VocabularyDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VocabularyDTO'
+        required: true
+      operationId: updateVocabulary
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vocabulary'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Vocabulary'
+        '404':
+          description: | 
+            ** Mô tả **
+            - Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng
+            - Không tìm thấy từ vựng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
 components:
   schemas:
+    Vocabulary:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "6696c21db49ccce616c5c3f6"
+        topicId:
+          type: string
+          example: "6696accf6dee071c1bc7d18d"
+        word:
+          type: string
+          example: "Friend"
+        meaning:
+          type: string
+          example: "Bạn bè dữ chưa ?"
+        example:
+          type: string
+          example: "He is my best friend"
+        status:
+          type: string
+          enum: [ "ACTIVE", "DELETED", "INACTIVE" ]
+          example: "ACTIVE"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-07-16T18:55:25.238Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-07-16T19:09:21.402Z"
+      required:
+        - _id
+        - topicId
+        - word
+        - meaning
+        - status
+        - createdAt
+        - updatedAt
+    VocabularyDTO:
+      type: object
+      properties:
+        word:
+          type: string
+          example: "Friend"
+        meaning:
+          type: string
+          example: "Bạn bè dữ chưa ?"
+        example:
+          type: string
+          example: "He is my best friend"
     BaseError:
       type: object
       properties:
