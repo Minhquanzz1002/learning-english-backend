@@ -13,10 +13,10 @@ export interface IVocabularyModel extends IVocabulary, mongoose.Document {
 
 const VocabularySchema = new mongoose.Schema({
   topicId: { type: mongoose.Types.ObjectId, required: true, ref: 'Topic' },
-  word: { type: String, required: true },
+  word: { type: String, required: true, index: true },
   meaning: { type: String, required: true },
   example: { type: String, required: true },
-  status: { type: String, required: true, enum: ['ACTIVE', 'DELETED', 'INACTIVE'] },
+  status: { type: String, required: true, enum: ['ACTIVE', 'DELETED', 'INACTIVE'], default: 'ACTIVE' },
 }, { versionKey: false, timestamps: true });
 
 const Vocabulary = mongoose.model<IVocabularyModel>('Vocabulary', VocabularySchema);
