@@ -335,10 +335,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Vocabulary'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vocabulary'
             application/xml:
               schema:
-                $ref: '#/components/schemas/Vocabulary'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vocabulary'
         '404':
           description: Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng
           content:
@@ -466,6 +470,181 @@ paths:
             ** Mô tả **
             - Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng
             - Không tìm thấy từ vựng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Không tìm thấy chủ đề hoặc chủ đề không phải loại từ vựng"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
+  /topics/{topicId}/theories:
+    get:
+      tags:
+        - topic
+      summary: Lấy tất cả ngữ pháp của chủ đề
+      parameters:
+        - name: topicId
+          description: Topic ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+      operationId: getTheories
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Theory'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Theory'
+        '404':
+          description: Không tìm thấy chủ đề hoặc chủ đề không phải loại ngữ pháp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Không tìm thấy chủ đề hoặc chủ đề không phải loại ngữ pháp"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
+    post:
+      tags:
+        - topic
+      summary: Thêm ngữ pháp cho chủ đề
+      parameters:
+        - name: topicId
+          description: Topic ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TheoryDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TheoryDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TheoryDTO'
+        required: true
+      operationId: createTheory
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Theory'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Theory'
+        '404':
+          description: Không tìm thấy chủ đề hoặc chủ đề không phải loại ngữ pháp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 400
+                message: "Không tìm thấy chủ đề hoặc chủ đề không phải loại ngữ pháp"
+        '500':
+          description: Lỗi không xác định
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseError'
+              example:
+                timestamp: "2024-07-15T17:11:02.251Z"
+                status: 500
+                message: "Lỗi không xác định. Thử lại sau"
+      security:
+        - jwt_auth: [ ]
+  /topics/{topicId}/theories/{theoryId}:
+    put:
+      tags:
+        - topic
+      summary: Cập nhật ngữ pháp
+      parameters:
+        - name: topicId
+          description: Topic ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+        - name: theoryId
+          description: Theory ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6694e9136fe1f7bae3db86fc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TheoryDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TheoryDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TheoryDTO'
+        required: true
+      operationId: updateTheory
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Theory'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Theory'
+        '404':
+          description: |
+            ** Mô tả **
+            - Không tìm thấy chủ đề hoặc chủ đề không phải loại ngữ pháp
+            - Không tìm thấy ngữ pháp
           content:
             application/json:
               schema:
@@ -655,6 +834,75 @@ components:
           example: "Mô tả"
       xml:
         name: topicDTO
+    Theory:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+          description: ID của lý thuyết
+        topicId:
+          type: string
+          format: objectId
+          description: ID của chủ đề
+        name:
+          type: string
+          description: Tên lý thuyết
+        description:
+          type: string
+          description: Mô tả lý thuyết
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                description: Tiêu đề của phần nội dung
+              content:
+                type: string
+                description: Nội dung của phần đó
+        status:
+          type: string
+          enum: [ ACTIVE, DELETED, INACTIVE ]
+          description: Trạng thái của lý thuyết
+        createdAt:
+          type: string
+          format: date-time
+          description: Thời gian tạo lý thuyết
+        updatedAt:
+          type: string
+          format: date-time
+          description: Thời gian cập nhật lý thuyết
+      required:
+        - _id
+        - topicId
+        - name
+        - description
+        - details
+        - status
+        - createdAt
+        - updatedAt
+    TheoryDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tên lý thuyết
+        description:
+          type: string
+          description: Mô tả lý thuyết
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                description: Tiêu đề của phần nội dung
+              content:
+                type: string
+                description: Nội dung của phần đó
   securitySchemes:
     jwt_auth:
       type: http
